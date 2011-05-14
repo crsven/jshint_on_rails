@@ -25,7 +25,7 @@ own code.
 
 To use JSHint as a gem in Rails 3, you just need to do one thing:
 
-* add `gem 'jshint_on_rails'` to bundler's Gemfile
+* add `gem 'jshint'` to bundler's Gemfile
 
 And that's it. On first run, JSHint on Rails will create an example config file for you in config/jshint.yml, which
 you can then tweak to suit your app.
@@ -34,7 +34,7 @@ In Rails 2 and in other frameworks JSHint on Rails can't be loaded automatically
 bit more work. The procedure in this case is:
 
 * install the gem in your application using whatever technique is recommended for your framework (e.g. using bundler,
-or by installing the gem manually with `gem install jshint_on_rails` and loading it with `require 'jshint'`)
+or by installing the gem manually with `gem install jshint` and loading it with `require 'jshint'`)
 * in your Rakefile, add a line to load the JSHint tasks:
 
         require 'jshint/tasks'
