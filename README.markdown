@@ -13,6 +13,7 @@ Java). Any decent version of Java will do (and by decent I mean 5.0 or later).
 
 Latest version should be compatible with Ruby 1.9 and Rails 3 (and also with Ruby 1.8 and Rails 2, of course).
 It has been tested on the following Ruby versions:
+
 * ruby 1.8.7 (2010-01-10 patchlevel 249)
 * ruby 1.9.2p180 (2011-02-18 revision 30909)
 
