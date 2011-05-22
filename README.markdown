@@ -1,5 +1,7 @@
 # JSHint on Rails
 
+![](http://travis-ci.org/liquid/jshint_on_rails.png "CI is provided by Travis CI")
+
 **JSHint on Rails** is a Ruby library which lets you run the [JSHint JavaScript code checker](https://jshint.com) on your Javascript code easily.
 It was originally forked from the [JSLint on Rails](http://github.com/psionides/jslint_on_rails) package.
 It can be installed either as a gem (the recommended method), or as a Rails plugin (legacy method).
