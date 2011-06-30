@@ -45,7 +45,7 @@ or by installing the gem manually with `gem install jshint` and loading it with 
 file to be kept - for example:
 
         JSHint.config_path = "config/jshint.yml"
-    
+
 * run a rake task which will generate a sample config file for you:
 
         rake jshint:copy_config
@@ -67,13 +67,13 @@ This will also create a sample `jshint.yml` config file for you in your config d
 If you wish to write your own rake task to run JSHint, you can create and execute the JSHint object manually:
 
     require 'jshint'
-    
+
     lint = JSHint::Lint.new(
       :paths => ['public/javascripts/**/*.js'],
       :exclude_paths => ['public/javascripts/vendor/**/*.js'],
       :config_path => 'config/jshint.yml'
     )
-    
+
     lint.run
 
 
@@ -98,32 +98,32 @@ To start the check, run the rake task:
 You will get a result like this (if everything goes well):
 
     Running JSHint:
-    
+
     checking public/javascripts/Event.js... OK
     checking public/javascripts/Map.js... OK
     checking public/javascripts/Marker.js... OK
     checking public/javascripts/Reports.js... OK
-    
+
     No JS errors found.
 
 If anything is wrong, you will get something like this instead:
 
     Running JSHint:
-    
+
     checking public/javascripts/Event.js... 2 errors:
-    
+
     Lint at line 24 character 15: Use '===' to compare with 'null'.
     if (a == null && b == null) {
-    
+
     Lint at line 72 character 6: Extra comma.
     },
-    
+
     checking public/javascripts/Marker.js... 1 error:
-    
+
     Lint at line 275 character 27: Missing radix parameter.
     var x = parseInt(mapX);
-    
-    
+
+
     Found 3 errors.
     rake aborted!
     JSHint test failed.
