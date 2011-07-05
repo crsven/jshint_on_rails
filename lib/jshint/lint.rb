@@ -24,8 +24,10 @@ module JSHint
       @config = default_config.merge(custom_config)
 
       if @config['predef'].is_a?(Array)
-        @config['predef'] = @config['predef'].join(",")
+        @config['predef'] = @global_vars = @config['predef'].join(",")
       end
+
+      gather_local_vars
 
       included_files = files_matching_paths(options, :paths)
       excluded_files = files_matching_paths(options, :exclude_paths)
@@ -38,9 +40,22 @@ module JSHint
     def run
       check_java
       Utils.xputs "Running JSHint:\n\n"
-      arguments = "#{JSHINT_FILE} #{option_string.inspect.gsub(/\$/, "\\$")} #{@file_list.join(' ')}"
-      success = call_java_with_status(RHINO_JAR_FILE, RHINO_JAR_CLASS, arguments)
-      raise LintCheckFailure, "JSHint test failed." unless success
+      if @local_vars.empty?
+        arguments = "#{JSHINT_FILE} #{option_string.inspect.gsub(/\$/, "\\$")} #{@file_list.join(' ')}"
+        success = call_java_with_status(RHINO_JAR_FILE, RHINO_JAR_CLASS, arguments)
+        raise LintCheckFailure, "JSHint test failed." unless success
+      else
+        @file_list.each do |filename|
+          if @local_vars.has_key?("#{filename}")
+            @config['predef'] = @global_vars + "," + @local_vars["#{filename}"]
+          else
+            @config['predef'] = @global_vars
+          end
+          arguments = "#{JSHINT_FILE} #{option_string.inspect.gsub(/\$/, "\\$")} #{filename}"
+          success = call_java_with_status(RHINO_JAR_FILE, RHINO_JAR_CLASS, arguments)
+          raise LintCheckFailure, "JSHint test failed." unless success
+        end
+      end
     end
 
 
@@ -76,6 +91,14 @@ module JSHint
       Utils.unique_files(file_list)
     end
 
+    def gather_local_vars
+      @local_vars = Hash.new
+      @config['paths'].each_with_index do |path_listing, index|
+        if path_listing.is_a?(Hash)
+          @local_vars["#{path_listing['path']}"] = "#{path_listing['locals']}"
+          @config['paths'][index] = path_listing['path']
+        end
+      end
+    end
   end
-
 end
