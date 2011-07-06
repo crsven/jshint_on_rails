@@ -23,11 +23,12 @@ module JSHint
       custom_config = Utils.load_config_file(options[:config_path] || JSHint.config_path)
       @config = default_config.merge(custom_config)
 
+      @global_vars = Array.new
       if @config['predef'].is_a?(Array)
         @config['predef'] = @global_vars = @config['predef'].join(",")
       end
 
-      gather_local_vars
+      gather_local_vars unless !config['paths']
 
       included_files = files_matching_paths(options, :paths)
       excluded_files = files_matching_paths(options, :exclude_paths)
@@ -41,9 +42,9 @@ module JSHint
       check_java
       Utils.xputs "Running JSHint:\n\n"
       if @local_vars.empty?
-        arguments = "#{JSHINT_FILE} #{option_string.inspect.gsub(/\$/, "\\$")} #{@file_list.join(' ')}"
-        success = call_java_with_status(RHINO_JAR_FILE, RHINO_JAR_CLASS, arguments)
-        raise LintCheckFailure, "JSHint test failed." unless success
+        aggregate_arguments = "#{JSHINT_FILE} #{option_string.inspect.gsub(/\$/, "\\$")} #{@file_list.join(' ')}"
+        aggregate_success = call_java_with_status(RHINO_JAR_FILE, RHINO_JAR_CLASS, aggregate_arguments)
+        raise LintCheckFailure, "JSHint test failed." unless aggregate_success
       else
         @file_list.each do |filename|
           if @local_vars.has_key?("#{filename}")

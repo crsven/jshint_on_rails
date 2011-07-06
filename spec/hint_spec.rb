@@ -3,7 +3,7 @@ require 'spec_helper'
 describe JSHint::Lint do
 
   JSHint::Lint.class_eval do
-    attr_reader :config, :file_list
+    attr_reader :config, :file_list, :local_vars
   end
 
   before :all do
@@ -59,6 +59,7 @@ describe JSHint::Lint do
 
   it "should fail if JSHint check fails" do
     lint = JSHint::Lint.new
+    lint.instance_variable_set("@local_vars", {})
     setup_java(lint)
     lint.should_receive(:call_java_with_status).once.and_return(false)
     lambda { lint.run }.should raise_error(JSHint::LintCheckFailure)
@@ -66,6 +67,7 @@ describe JSHint::Lint do
 
   it "should not fail if JSHint check passes" do
     lint = JSHint::Lint.new
+    lint.instance_variable_set("@local_vars", {})
     setup_java(lint)
     lint.should_receive(:call_java_with_status).once.and_return(true)
     lambda { lint.run }.should_not raise_error
@@ -73,6 +75,7 @@ describe JSHint::Lint do
 
   it "should only do Java check once" do
     lint = JSHint::Lint.new
+    lint.instance_variable_set("@local_vars", {})
     setup_java(lint)
     lint.should_receive(:call_java_with_status).twice.and_return(true)
     lambda do
@@ -84,6 +87,7 @@ describe JSHint::Lint do
   it "should pass an ampersand-separated option string to JSHint" do
     lint = JSHint::Lint.new
     lint.instance_variable_set("@config", { 'debug' => true, 'semicolons' => false, 'linelength' => 120 })
+    lint.instance_variable_set("@local_vars", {})
     setup_java(lint)
     param_string = ""
     lint.
@@ -100,6 +104,7 @@ describe JSHint::Lint do
   it "should escape $ in option string when passing it to Java/JSHint" do
     lint = JSHint::Lint.new
     lint.instance_variable_set("@config", { 'predef' => 'window,$,Ajax,$app,Request' })
+    lint.instance_variable_set("@local_vars", {})
     setup_java(lint)
     param_string = ""
     lint.
@@ -113,6 +118,7 @@ describe JSHint::Lint do
   it "should pass space-separated list of files to JSHint" do
     lint = JSHint::Lint.new
     lint.instance_variable_set("@file_list", ['app.js', 'test.js', 'jquery.js'])
+    lint.instance_variable_set("@local_vars", {})
     setup_java(lint)
     lint.
       should_receive(:call_java_with_status).
