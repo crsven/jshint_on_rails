@@ -23,7 +23,7 @@ module JSHint
       custom_config = Utils.load_config_file(options[:config_path] || JSHint.config_path)
       @config = default_config.merge(custom_config)
 
-      @global_vars = Array.new
+      @global_vars = ""
       if @config['predef'].is_a?(Array)
         @config['predef'] = @global_vars = @config['predef'].join(",")
       end
