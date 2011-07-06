@@ -128,6 +128,27 @@ describe JSHint::Lint do
     lint.run
   end
 
+  it "should test files separately, with the correct variables declared, if local variables are set for any file" do
+    lint = JSHint::Lint.new
+    lint.instance_variable_set("@file_list", ['app.js', 'test.js', 'jquery.js'])
+    lint.instance_variable_set("@global_vars", "global_var")
+    lint.instance_variable_set("@local_vars", {"app.js" => "var_app"})
+    setup_java(lint)
+    lint.
+      should_receive(:call_java_with_status).
+      with(an_instance_of(String), an_instance_of(String), /predef\=\\*\"global_var,var_app\\*\".*app\.js$/).
+      and_return(true)
+    lint.
+      should_receive(:call_java_with_status).
+      with(an_instance_of(String), an_instance_of(String), /predef\=\\*\"global_var\\*\".*test\.js$/).
+      and_return(true)
+    lint.
+      should_receive(:call_java_with_status).
+      with(an_instance_of(String), an_instance_of(String), /predef\=\\*\"global_var\\*\".*jquery\.js$/).
+      and_return(true)
+    lint.run
+  end
+
   describe "file lists" do
     before :each do
       JSHint::Utils.stub!(:exclude_files).and_return { |inc, exc| inc - exc }
