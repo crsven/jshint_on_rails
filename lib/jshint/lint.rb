@@ -28,7 +28,7 @@ module JSHint
         @config['predef'] = @global_vars = @config['predef'].join(",")
       end
 
-      gather_local_vars unless !config['paths']
+      gather_local_vars unless !@config['paths']
 
       included_files = files_matching_paths(options, :paths)
       excluded_files = files_matching_paths(options, :exclude_paths)
