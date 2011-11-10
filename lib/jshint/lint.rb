@@ -10,7 +10,7 @@ module JSHint
   TEST_JAR_CLASS = "Test"
   RHINO_JAR_CLASS = "org.mozilla.javascript.tools.shell.Main"
 
-  JSHINT_FILE = File.expand_path("#{PATH}/vendor/jshint.js")
+  JSHINT_FILE = File.expand_path("#{PATH}/vendor/env/jshint-rhino.js")
 
   class Lint
 
